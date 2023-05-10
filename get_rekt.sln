@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "get_rekt", "get_rekt\get_rekt.vcxproj", "{077AE4C1-3D35-41FB-BB5D-FCFD0D9DFDDB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "injector", "injector\injector.vcxproj", "{474775AA-2A0B-4AB6-94D5-64A813FFE2B4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{077AE4C1-3D35-41FB-BB5D-FCFD0D9DFDDB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{077AE4C1-3D35-41FB-BB5D-FCFD0D9DFDDB}.Debug|Win32.Build.0 = Debug|Win32
+		{077AE4C1-3D35-41FB-BB5D-FCFD0D9DFDDB}.Release|Win32.ActiveCfg = Release|Win32
+		{077AE4C1-3D35-41FB-BB5D-FCFD0D9DFDDB}.Release|Win32.Build.0 = Release|Win32
+		{474775AA-2A0B-4AB6-94D5-64A813FFE2B4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{474775AA-2A0B-4AB6-94D5-64A813FFE2B4}.Debug|Win32.Build.0 = Debug|Win32
+		{474775AA-2A0B-4AB6-94D5-64A813FFE2B4}.Release|Win32.ActiveCfg = Release|Win32
+		{474775AA-2A0B-4AB6-94D5-64A813FFE2B4}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
