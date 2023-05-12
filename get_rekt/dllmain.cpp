@@ -1,5 +1,7 @@
 ﻿// dllmain.cpp : Defines the entry point for the DLL application.
 #include "stdafx.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 // TODO:
 // - create the hook
@@ -12,6 +14,11 @@ BOOL APIENTRY DllMain( HMODULE hModule,
                        LPVOID lpReserved
 					 )
 {
+	FILE * f;
+	fopen_s(&f, "f.txt", "w");
+	fprintf(f, "This works!");
+	fclose(f);
+
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
