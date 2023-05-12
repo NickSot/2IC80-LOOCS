@@ -4,8 +4,8 @@
 
 // TODO:
 // - get the PID of the game process x
-// - spawn a thread in the game process
-// - load the get_rekt.dll file into the game process from the thread
+// - spawn a thread in the game process x
+// - load the get_rekt.dll file into the game process from the thread x
 // - export the binary
 
 DWORD PrintProcessNameAndID( DWORD processID, TCHAR * processName)
@@ -88,7 +88,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	// TODO: change this to point to the final location
-	char* buffer = "./get_rekt.dll";
+	char* buffer = "C://Users//nikol//Desktop//TUe//Year3//Q4//Lab On Offensive Computer Security//get_rekt//Debug//get_rekt.dll";
 	
 	// Allocate memory for the argument of the LoadLibraryA function in the heap of the target process
 	LPVOID arg = (LPVOID)VirtualAllocEx(hProcess, NULL, strlen(buffer), MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
@@ -109,7 +109,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	// Initiate the thread, the beginning address of which is the LoadLibraryA function, in the target process
-	HANDLE threadHandle = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE) addr, NULL, NULL, NULL);
+	HANDLE threadHandle = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE) addr, arg, NULL, NULL);
+
+	WaitForSingleObject(threadHandle, INFINITE);
 
 	if (threadHandle == NULL) {
 		printf("Error creating the remote thread.");
