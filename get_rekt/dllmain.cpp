@@ -2,55 +2,69 @@
 #include "stdafx.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <Windows.h>
+#include <Psapi.h>
 
-// TODO:
-// - create the hook
-// - locate the physics component of the engine
-// - call the hook on each engine tick
-// - export the binary
+DWORD thread_id;
+
+#pragma comment(lib, "psapi.lib")
+
+BYTE * PlayerJumpAddress;
+
+VOID WINAPI Play(LPVOID Module) {
+	BYTE * client = NULL;
+	BYTE * engine = NULL;
+
+	// get the base addresses of client.dll and engine.dll
+	while (client == NULL && engine == NULL) {
+		client = (BYTE *) GetModuleHandle(L"client.dll");
+		engine = (BYTE *) GetModuleHandle(L"engine.dll");
+	}
+
+	// jump offset
+	BYTE * JumpAddress = client + 0x4F5D24;
+	*JumpAddress = 5;
+
+	// CALL THIS FUNCTION HERE ALWAYS!!!
+	FreeLibraryAndExitThread((HMODULE)Module, 0);
+}
+
+void LoopThread() {
+	HANDLE LoopThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)Play, NULL, NULL, &thread_id);
+
+	if (LoopThread != NULL) {
+		CloseHandle(LoopThread);
+	}
+}
+
+void Detatch() {
+	HANDLE LoopThread = OpenThread(THREAD_TERMINATE, FALSE, thread_id);
+
+	if (LoopThread != NULL) {
+		CloseHandle(LoopThread);
+	}
+}
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
                        LPVOID lpReserved
 					 )
-{
-	HANDLE hFile = CreateFile(L"./f.txt",
-                       GENERIC_WRITE,
-                       0,
-                       NULL,
-                       CREATE_NEW,
-                       FILE_ATTRIBUTE_NORMAL,
-                       NULL);
-
-	if (hFile == INVALID_HANDLE_VALUE) 
-    { 
-        printf("%d", GetLastError());
-        return FALSE;
-    }
-
-
-	char * DataBuffer = "works!";
-	DWORD bytesWritten = 0;
-
-	BOOL bErrorFlag = WriteFile(hFile, DataBuffer, strlen(DataBuffer), &bytesWritten, NULL);
-
-	if (FALSE == bErrorFlag)
-    {
-        printf("Error writing to the file.\n");
-
-		return FALSE;
-    }
-
-	CloseHandle(hFile);
-	
+{	
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
 	case DLL_THREAD_ATTACH:
+		LoopThread();
+		break;
+
 	case DLL_THREAD_DETACH:
+		Detatch();
+		break;
+
 	case DLL_PROCESS_DETACH:
 		break;
 	}
+
 	return TRUE;
 }
 
