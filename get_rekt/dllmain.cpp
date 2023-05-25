@@ -22,12 +22,16 @@ LRESULT CALLBACK TrackKeyPresses(HWND Window, UINT Message, WPARAM wParam, LPARA
 	printf("Key pressed: %d\n", wParam);
 	printf("Disable cheat: %d\n", Disable);
 
-	// the key we're looking for is 'L' = 0x4c || 0x6c
+	// the keys we're looking for are 'L' = 0x4c || 0x6c
+	// or 'H' = 0x49 || 0x68
+
 	if (Message == WM_KEYDOWN) {
+		// on 'L', toggle the cheat
 		if (wParam == 0x4c || wParam == 0x6c) {
 			BHopToggle = !BHopToggle;
 		}
 
+		// on 'H', stop the cheat
 		if (wParam == 0x48 || wParam == 0x68) {
 			Disable = true;
 		}
@@ -98,4 +102,3 @@ BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpRese
 
 	return TRUE;
 }
-
