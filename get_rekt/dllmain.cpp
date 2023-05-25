@@ -7,28 +7,23 @@
 
 DWORD thread_id;
 
+BYTE * JumpAddress;
+BYTE * PlayerInAir;
+
 #pragma comment(lib, "psapi.lib")
 
-BYTE * PlayerJumpAddress;
-
 VOID WINAPI Play(LPVOID Module) {
-	BYTE * client = NULL;
-	BYTE * engine = NULL;
-
-	// get the base addresses of client.dll and engine.dll
-	while (client == NULL && engine == NULL) {
-		client = (BYTE *) GetModuleHandle(L"client.dll");
-		engine = (BYTE *) GetModuleHandle(L"engine.dll");
+	if (* PlayerInAir) {
+		*JumpAddress = 0;
 	}
-
-	// jump offset
-	BYTE * JumpAddress = client + 0x4F5D24;
-	*JumpAddress = 5;
+	else {
+		*JumpAddress = 5;
+	}
 
 	// CALL THIS FUNCTION HERE ALWAYS!!!
 	FreeLibraryAndExitThread((HMODULE)Module, 0);
 }
-
+ 
 void LoopThread() {
 	HANDLE LoopThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)Play, NULL, NULL, &thread_id);
 
@@ -45,11 +40,22 @@ void Detatch() {
 	}
 }
 
-BOOL APIENTRY DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-					 )
-{	
+BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
+{
+	BYTE * client = NULL;
+	BYTE * engine = NULL;
+
+	// get the base addresses of client.dll and engine.dll
+	while (client == NULL && engine == NULL) {
+		client = (BYTE *) GetModuleHandle(L"client.dll");
+		engine = (BYTE *) GetModuleHandle(L"engine.dll");
+	}
+
+	// jump offset
+	JumpAddress = client + 0x4F5D24;
+	// player in air state offset
+	PlayerInAir = client + 0x4A4078;
+
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
@@ -67,4 +73,3 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 
 	return TRUE;
 }
-
